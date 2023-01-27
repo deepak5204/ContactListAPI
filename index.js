@@ -7,7 +7,7 @@ const port = 8008;
 const db = require('./config/mongoose');
 const Contact = require('./models/contact');
 
-//post route
+//post route for create coontact
 app.post('/create-contact', function(req, res){
     Contact.create({
         name: req.body.name,
@@ -16,44 +16,59 @@ app.post('/create-contact', function(req, res){
         if(error){
             console.log('error in crate contatct list');
             return;
-        } 
-        console.log('new contact ', newContact);
-        return newContact;
+        }
+        return res.json({
+            message :"Contact created",
+            data : newContact
+        });
     });
-    // console.log('hello contact', req.body.name);
-    // console.log('Phone', req.body.phone);
-    res.end();
 });
+
+
 
 //get routes
 app.get('/get-contact', function(req, res){
-    const user = Contact.find({}, function(err, contacts){
+     Contact.find({}, function(err, contacts){
         if(err){
             console.log('contact not found.');
             return;
         }
-
-        console.log(user);
-        // console.log(contacts);
-        return res.contacts;
+        return res.json({
+            message :"Contact created",
+            data : contacts
+        });
     });
-    res.end();
+    // res.end();
 });
 
 
 //delete route
-app.get('delete-contact', function(req, res){
-    let id = re.query.id;
+app.post('/delete-contact', function(req, res){
+    let id = req.body.id;
 
     Contact.findByIdAndDelete(id, function(err){
         if(err){
             console.log('error in delete contact');
             return;
         }
-        console.log(id);
-        
-        return res;
+        return res.json({message :"Contact deleted successfully"})
     });
+});
+
+
+//update Route
+app.put('/update-contact', function(req, res){
+    const id = req.params.id;
+    console.log(req.params.id);
+    Contact.findOneAndUpdate(id, {
+        $set:{
+            name: req.body.name,
+           
+            phone: req.body.phone
+        }
+    });
+    return res.send({message :"Contact updated"});
+    // res.end();
 });
 
 app.listen(port, (err) =>{
