@@ -7,7 +7,7 @@ const port = 8008;
 const db = require('./config/mongoose');
 const Contact = require('./models/contact');
 
-//post route for create coontact
+//post route for create contact
 app.post('/create-contact', function(req, res){
     Contact.create({
         name: req.body.name,
@@ -38,13 +38,13 @@ app.get('/get-contact', function(req, res){
             data : contacts
         });
     });
-    // res.end();
 });
 
 
-//delete route
+//delete route (using query params)
 app.post('/delete-contact', function(req, res){
-    let id = req.body.id;
+    let id = req.query.id;
+    console.log(id);
 
     Contact.findByIdAndDelete(id, function(err){
         if(err){
@@ -56,20 +56,16 @@ app.post('/delete-contact', function(req, res){
 });
 
 
-//update Route
-app.put('/update-contact', function(req, res){
-    const id = req.params.id;
-    console.log(req.params.id);
-    Contact.findOneAndUpdate(id, {
-        $set:{
-            name: req.body.name,
-           
-            phone: req.body.phone
-        }
-    });
-    return res.send({message :"Contact updated"});
-    // res.end();
+//update Route (using simple params)
+
+
+app.patch('/update/:id', function (req, res) {
+    var updateObject = req.body; // {last_name : "smith", age: 44}
+    var id = req.params.id;
+    db.Contact.update({_id  : ObjectId(id)}, {$set: updateObject});
 });
+
+
 
 app.listen(port, (err) =>{
  if(err){
