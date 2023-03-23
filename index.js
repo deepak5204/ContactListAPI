@@ -8,21 +8,22 @@ const db = require('./config/mongoose');
 const Contact = require('./models/contact');
 
 //post route for create contact
-app.post('/create-contact', function(req, res){
-    Contact.create({
-        name: req.body.name,
-        phone: req.body.phone
-    }, function(error, newContact){
-        if(error){
-            console.log('error in crate contatct list');
-            return;
-        }
-        return res.json({
-            message :"Contact created",
-            data : newContact
+app.post('/create_contact', async function(req, res){
+    try{
+        const newContact = await Contact.create({
+            name: req.body.name,
+            phone: req.body.phone
         });
+           res.status(200).json({
+                message :"Success",
+                data : {
+                    newContact
+                }
+            });
+    } catch (err){
+        console.log(err); 
+    }
     });
-});
 
 
 
@@ -42,28 +43,43 @@ app.get('/get-contact', function(req, res){
 
 
 //delete route (using query params)
-app.post('/delete-contact', function(req, res){
-    let id = req.query.id;
+app.delete('/:id/delete-contact', async function(req, res){
+    let id = req.params.id;
     console.log(id);
 
-    Contact.findByIdAndDelete(id, function(err){
-        if(err){
-            console.log('error in delete contact');
-            return;
+     const deletedContact = await Contact.findByIdAndDelete(id);
+    res.status(200).json({
+        message:'success',
+        data: {
+            deletedContact
         }
-        return res.json({message :"Contact deleted successfully"})
-    });
+    })
+    //      function(err){
+    //     if(err){
+    //         console.log('error in delete contact');
+    //         return;
+    //     }
+    //     return res.json({message :"Contact deleted successfully"})
+    // });
 });
 
 
 //update Route (using simple params)
+app.patch('/:id/update', async function (req, res) {
+    try{
+        const updatedContact = await Contact.findByIdAndUpdate(req.params.id);
+        res.status(200).json({
+        message: 'success',
+        data: {
+            updatedContact
+        }
+    });
 
-
-app.patch('/update/:id', function (req, res) {
-    var updateObject = req.body; // {last_name : "smith", age: 44}
-    var id = req.params.id;
-    db.Contact.update({_id  : ObjectId(id)}, {$set: updateObject});
-});
+    } catch (err) {
+        console.log(err);
+        
+    }
+    });
 
 
 

@@ -8,9 +8,8 @@ const contactSchema = new mongoose.Schema({
         required: true
     },
     phone: {
-
         type: String,
-        required: true
+        required: true,
     }
 });
 
