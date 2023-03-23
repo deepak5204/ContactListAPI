@@ -44,6 +44,7 @@ app.get('/get-contact', function(req, res){
 
 //delete route (using query params)
 app.delete('/:id/delete-contact', async function(req, res){
+  try{
     let id = req.params.id;
     console.log(id);
 
@@ -54,20 +55,20 @@ app.delete('/:id/delete-contact', async function(req, res){
             deletedContact
         }
     })
-    //      function(err){
-    //     if(err){
-    //         console.log('error in delete contact');
-    //         return;
-    //     }
-    //     return res.json({message :"Contact deleted successfully"})
-    // });
+  } catch (err) {
+    console.log(err);
+    
+  }
 });
 
 
 //update Route (using simple params)
 app.patch('/:id/update', async function (req, res) {
     try{
-        const updatedContact = await Contact.findByIdAndUpdate(req.params.id);
+        const updatedContact = await Contact.findByIdAndUpdate(req.params.id,
+            req.body,{
+                new: true
+            });
         res.status(200).json({
         message: 'success',
         data: {
