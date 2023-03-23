@@ -8,7 +8,7 @@ const db = require('./config/mongoose');
 const Contact = require('./models/contact');
 
 //post route for create contact
-app.post('/create_contact', async function(req, res){
+app.post('/create_contact', async (req, res) => {
     try{
         const newContact = await Contact.create({
             name: req.body.name,
@@ -28,7 +28,7 @@ app.post('/create_contact', async function(req, res){
 
 
 //get routes
-app.get('/get-contact', function(req, res){
+app.get('/get-contact', (req, res) => {
      Contact.find({}, function(err, contacts){
         if(err){
             console.log('contact not found.');
@@ -43,7 +43,7 @@ app.get('/get-contact', function(req, res){
 
 
 //delete route (using query params)
-app.delete('/:id/delete-contact', async function(req, res){
+app.delete('/:id/delete-contact', async (req, res) => {
   try{
     let id = req.params.id;
     console.log(id);
@@ -63,7 +63,7 @@ app.delete('/:id/delete-contact', async function(req, res){
 
 
 //update Route (using simple params)
-app.patch('/:id/update', async function (req, res) {
+app.patch('/:id/update', async (req, res) => {
     try{
         const updatedContact = await Contact.findByIdAndUpdate(req.params.id,
             req.body,{
