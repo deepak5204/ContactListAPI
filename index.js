@@ -29,7 +29,7 @@ app.post('/create_contact', async (req, res) => {
 
 //get routes
 app.get('/get-contact', (req, res) => {
-     Contact.find({}, function(err, contacts){
+     Contact.find({}, (err, contacts) => {
         if(err){
             console.log('contact not found.');
             return;
