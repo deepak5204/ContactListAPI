@@ -26,6 +26,29 @@ app.post('/create_contact', async (req, res) => {
     });
 
 
+    //FIND ONE CONTACT
+    app.get('/:id/getOne', async (req, res) => {
+        const id = req.params.id;
+        try {
+            const contact = await Contact.findById(id);
+
+            res.status(200).json({
+                message: 'success',
+                data: {
+                    contact
+                }
+            }); 
+        } catch (err) {
+           res.status(404).json({
+            message: 'fail',
+            data: {
+                err
+            }
+           });
+        }
+    });
+
+
 
 //get routes
 app.get('/get-contact', (req, res) => {
